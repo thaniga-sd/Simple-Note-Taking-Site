@@ -27,7 +27,8 @@
             background-color: #f9f9f9;
         }
 
-        .deleteButton {
+        .deleteButton,
+        .copyButton {
             color: red;
             cursor: pointer;
             margin-left: 5px;
@@ -97,7 +98,8 @@
                 noteItem.className = 'noteItem';
 
                 var deleteButton = '<span class="deleteButton" onclick="deleteNote(' + index + ')">Delete</span>';
-                var noteHeading = '<div class="noteHeading"><strong>Note ' + (index + 1) + ':</strong>' + deleteButton + '</div>';
+                var copyButton = '<span class="copyButton" onclick="copyNote(' + index + ')">Copy</span>';
+                var noteHeading = '<div class="noteHeading"><strong>Note ' + (index + 1) + ':</strong>' + copyButton + deleteButton + '</div>';
 
                 noteItem.innerHTML = noteHeading + '<br>' + note;
                 noteList.appendChild(noteItem);
@@ -117,6 +119,18 @@
 
             // Reload the notes
             loadNotes();
+        }
+
+        // Function to copy a specific note to the clipboard
+        function copyNote(index) {
+            // Get existing notes from localStorage
+            var existingNotes = JSON.parse(localStorage.getItem('notes')) || [];
+
+            // Copy the note at the specified index to the clipboard
+            var noteToCopy = existingNotes[index];
+            navigator.clipboard.writeText(noteToCopy).catch(function (err) {
+                console.error('Unable to copy note to clipboard', err);
+            });
         }
     </script>
 
