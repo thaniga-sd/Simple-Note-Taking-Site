@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Taking Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #noteInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #noteList {
+            width: 100%;
+        }
+
+        .noteItem {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .deleteButton {
+            color: red;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .noteHeading {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #saveButton {
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Simple Note Taking Site</h1>
+
+    <textarea id="noteInput" placeholder="Type your note here..."></textarea>
+    <button id="saveButton" onclick="saveNote()">Save Note</button>
+
+    <div id="noteList"></div>
+
+    <script>
+        // Load existing notes from localStorage
+        window.onload = function () {
+            loadNotes();
+        };
+
+        // Function to save the note to localStorage
+        function saveNote() {
+            var noteInput = document.getElementById('noteInput');
+            var noteList = document.getElementById('noteList');
+
+            // Get existing notes from localStorage
+            var existingNotes = JSON.parse(localStorage.getItem('notes')) || [];
+
+            // Add the new note to the list
+            var newNote = noteInput.value;
+            existingNotes.push(newNote);
+
+            // Save the updated list to localStorage
+            localStorage.setItem('notes', JSON.stringify(existingNotes));
+
+            // Clear the input field
+            noteInput.value = '';
+
+            // Reload the notes
+            loadNotes();
+        }
+
+        // Function to load notes from localStorage and display them
+        function loadNotes() {
+            var noteList = document.getElementById('noteList');
+
+            // Get existing notes from localStorage
+            var existingNotes = JSON.parse(localStorage.getItem('notes')) || [];
+
+            // Clear the existing list
+            noteList.innerHTML = '';
+
+            // Display each note in the list
+            existingNotes.forEach(function (note, index) {
+                var noteItem = document.createElement('div');
+                noteItem.className = 'noteItem';
+
+                var deleteButton = '<span class="deleteButton" onclick="deleteNote(' + index + ')">Delete</span>';
+                var noteHeading = '<div class="noteHeading"><strong>Note ' + (index + 1) + ':</strong>' + deleteButton + '</div>';
+
+                noteItem.innerHTML = noteHeading + '<br>' + note;
+                noteList.appendChild(noteItem);
+            });
+        }
+
+        // Function to delete a specific note
+        function deleteNote(index) {
+            // Get existing notes from localStorage
+            var existingNotes = JSON.parse(localStorage.getItem('notes')) || [];
+
+            // Remove the note at the specified index
+            existingNotes.splice(index, 1);
+
+            // Save the updated list to localStorage
+            localStorage.setItem('notes', JSON.stringify(existingNotes));
+
+            // Reload the notes
+            loadNotes();
+        }
+    </script>
+
+</body>
+</html>
